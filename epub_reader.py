@@ -21,7 +21,7 @@ blacklist = [
 	'head', 
 	'input',
 	'script',
-	# there may be more elements you don't want, such as "style", etc.
+	
 ]
 def chap2text(chap):
     output = ''
@@ -44,21 +44,40 @@ def epub2text(epub_path):
     ttext = thtml2ttext(chapters)
     return chapters,ttext
 
+#getting html output file
 ch, out = epub2text('1_5225_1.epub')
+out=out[2]
+f=open("out.html", "w")
+f.write(str(ch[2])) #observed ch[2] was returning full chapter in out.html
+f.close()
 
+#make a list of all the paragraphs in the chapter
+u= [line for line in out.split('\n') if line.strip() != '']
 
-#converting into a single string
-stringList = ' '.join([str(item) for item in out ]).lower()
+#removing escape characters between paragraphs and getting new output
+new_out = '\n'.join([str(item) for item in u ])
+f=open("new_out.html", "w",encoding="utf-8")
+f.write(str(new_out)) #observed ch[2] was returning full chapter in out.html
+f.close()
 
-
+#taking input from user
+word = input("Enter the word: ")
 #count word in a string
-# define string
-"""substring = input("Enter the word: ")
-count = stringList.count(substring.lower())"""
-# print count
-print(ch)
+""""count = stringList.count(substring.lower())"""
+
+
+
+#Returning list of paragraph containig the word asked by user
+final_out = list(x.lower() for x in u)
+final_out = list(i.strip() for i in final_out)#removing spaces at begining and end
+import re
+def searchWordinSentence(word,final_out):
+    pattern = re.compile(word)
+    if re.search(pattern,final_out):
+        return True
+para=list((t for t in final_out if searchWordinSentence(word,t)))
 
 
 ##book = epub.read_epub('1_5225_1.epub')
 #for image in book.get_items_of_type(ebooklib.ITEM_IMAGE):
- #   print (image)*/
+ # print (image)
